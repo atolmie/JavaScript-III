@@ -18,12 +18,12 @@
 
 function GameObject(attrs) {
   this.createdAT = attrs.createdAT;
-  this.name = attrs.name; 
+  //this.name = attrs.name; 
   this.dimensions = attrs.dimensions
 }
 
 GameObject.prototype.destroy = function() {
-console.log(`destroying ${this.name}`);
+console.log (`destroying ${this.name} was removed from the game.`);
 };
 
 
@@ -36,11 +36,13 @@ console.log(`destroying ${this.name}`);
 */
 
 function CharacterStats(stats) {
-  this.healthPoints = stats.healthPoints;
-  this.takeDamage = stats.takeDamage;
-}
-CharacterStats.prototype.destroy = function() {
-  console.log(`destroying ${this.name}`);
+ GameObject.call(this, stats);
+ this.healthPoints = stats.healthPoints;
+  }
+CharacterStats.prototype = Object.create(GameObject.prototype);
+
+CharacterStats.prototype.takeDamage = function() {
+  return(`destroying ${this.name} took damage`);
   };
   
 
@@ -55,7 +57,16 @@ CharacterStats.prototype.destroy = function() {
   
 */
 
-function Humanoid
+function Humanoid (traits) {
+  this.team = traits.team;
+  this.weapons = traits.weapons;
+  this.language = traits.language;
+}
+Humanoid.prototype = Object.create(CharacterStats.prototype);
+
+Humanoid.prototype.greet = function () {
+  return `${this.name} offers a greeting in ${this.language}.`;
+};
  
 /*
   * Inheritance chain: GameObject -> CharacterStats -> Humanoid
@@ -66,13 +77,13 @@ function Humanoid
 // Test you work by un-commenting these 3 objects and the list of console logs below:
 
 
-  const mage = new Humanoid({
+   const mage = new Humanoid({
     createdAt: new Date(),
     dimensions: {
       length: 2,
       width: 1,
       height: 1,
-    },
+    }, 
     healthPoints: 5,
     name: 'Bruce',
     team: 'Mage Guild',
@@ -122,8 +133,8 @@ function Humanoid
   console.log(mage.name); // Bruce
   console.log(swordsman.team); // The Round Table
   console.log(mage.weapons); // Staff of Shamalama
-  console.log(archer.language); // Elvish
-  console.log(archer.greet()); // Lilith offers a greeting in Elvish.
+  //console.log(archer.language); // Elvish
+  //console.log(archer.greet()); // Lilith offers a greeting in Elvish.
   console.log(mage.takeDamage()); // Bruce took damage.
   console.log(swordsman.destroy()); // Sir Mustachio was removed from the game.
 
